@@ -1,0 +1,56 @@
+<Page
+    x:Class="IdvLogin.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="16" MaxWidth="600">
+
+            <TextBlock Text="设置" Style="{StaticResource TitleTextBlockStyle}"/>
+
+            <!-- CA 证书管理 -->
+            <Expander Header="CA 根证书管理" IsExpanded="True">
+                <StackPanel Spacing="8" Margin="0,8,0,0">
+                    <TextBlock TextWrapping="WrapWholeWords"
+                               Text="代理服务需要在本机安装自签名 CA 证书，以便对 HTTPS 流量进行解密和修改。"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE73E;"
+                                  Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                  Visibility="{x:Bind ViewModel.IsCaCertInstalled, Mode=OneWay,
+                                               Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <FontIcon Glyph="&#xE814;"
+                                  Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                  Visibility="{x:Bind ViewModel.IsCaCertInstalled, Mode=OneWay,
+                                               Converter={StaticResource BoolNegVisibilityConverter}}"/>
+                        <TextBlock Text="{x:Bind ViewModel.IsCaCertInstalled, Mode=OneWay,
+                                         Converter={StaticResource CertStatusTextConverter}}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="安装 CA 证书"
+                                Command="{x:Bind ViewModel.InstallCaCertCommand}"
+                                IsEnabled="{x:Bind ViewModel.IsBusy, Mode=OneWay,
+                                            Converter={StaticResource BoolNegConverter}}"/>
+                        <Button Content="重新生成并安装"
+                                Command="{x:Bind ViewModel.RegenerateCaCertCommand}"
+                                IsEnabled="{x:Bind ViewModel.IsBusy, Mode=OneWay,
+                                            Converter={StaticResource BoolNegConverter}}"/>
+                        <Button Content="刷新状态"
+                                Command="{x:Bind ViewModel.RefreshCertStatusCommand}"/>
+                    </StackPanel>
+                    <ProgressBar IsIndeterminate="True"
+                                 Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay,
+                                              Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </StackPanel>
+            </Expander>
+
+            <!-- 状态栏 -->
+            <InfoBar IsOpen="{x:Bind ViewModel.StatusMessage.Length, Mode=OneWay,
+                              Converter={StaticResource NotEmptyToBoolConverter}}"
+                     Message="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                     Severity="Informational"
+                     IsClosable="True"/>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -12,3 +12,8 @@ src/python/
 oppomisc/
 game.sdk.domain.dto/
 tools/oppo_*
+
+# WinUI3 / .NET build artifacts
+winui/**/bin/
+winui/**/obj/
+winui/**/*.user
